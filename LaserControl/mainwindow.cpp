@@ -6,6 +6,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::MainWindow)
+    ,isXReverse(false)
+    ,isYReverse(false)
+    ,isZReverse(false)
 {
     ui->setupUi(this);
     ui->xLeftMoveBtn->setEnabled(false);
@@ -19,11 +22,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->baudRateComb->setCurrentIndex(4);
 
-    connect(m_serialProt, SIGNAL(QSerialPort::readyRead()), this, SLOT(MainWindow::onSerialReceiveMessage()));
+    connect(m_serialProt, &QSerialPort::readyRead, this, &MainWindow::onSerialReceiveMessage);
     /*
     QString serialProtName = ui->serialPortNameComb->currentText();
     qDebug() << serialProtName << endl;
     */
+
 }
 
 MainWindow::~MainWindow()
@@ -34,12 +38,34 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_xLeftMoveBtn_clicked()
 {
+    qreal xStep = ui->xStepLineEidt->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
+    //判断X轴是否反向
+    if(isXReverse==false)
+    {
+        move(xStep*(-1),0,0,fSpeed);
+    }
+    else
+    {
+        move(xStep,0,0,fSpeed);
+    }
 }
 
 void MainWindow::on_xRightMoveBtn_clicked()
 {
+    qreal xStep = ui->xStepLineEidt->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
+    //判断X轴是否反向
+    if(isXReverse==false)
+    {
+        move(xStep,0,0,fSpeed);
+    }
+    else
+    {
+        move(xStep*(-1),0,0,fSpeed);
+    }
 }
 
  //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显示
@@ -55,6 +81,20 @@ void MainWindow::onSerialReceiveMessage()
     data = "->>" + data;
     ui->viewTextEdit->setTextColor("Red");
     ui->viewTextEdit->append(data);
+}
+
+void MainWindow::sendSerialData(QByteArray &data, QColor color)
+{
+    m_serialProt->write(data);
+    ui->viewTextEdit->setTextColor(color);
+    data = "<<-" + data;
+    ui->viewTextEdit->append(data);
+}
+
+void MainWindow::move(qreal X, qreal Y, qreal Z, qreal F)
+{
+    QByteArray data = (QString("$J=G21G91X%1Y%2Z%3F%4\n").arg(X).arg(Y).arg(Z).arg(F)).toUtf8();
+    sendSerialData(data,QColor(0,0,255));
 }
 
 
@@ -149,7 +189,6 @@ void MainWindow::on_openSerialBtn_clicked()
             ui->xLeftMoveBtn->setEnabled(true);
             ui->xRightMoveBtn->setEnabled(true);
         }
-
         ui->openSerialBtn->setText("关闭串口");
     }
     else
@@ -167,4 +206,40 @@ void MainWindow::on_openSerialBtn_clicked()
         ui->xRightMoveBtn->setEnabled(false);
     }
 
+}
+
+void MainWindow::on_xReverseBtn_clicked()
+{
+    if(isXReverse==false)
+    {
+        isXReverse = true;
+    }
+    else
+    {
+        isXReverse = false;
+    }
+}
+
+void MainWindow::on_yReverseBtn_clicked()
+{
+    if(isYReverse == false)
+    {
+        isYReverse = true;
+    }
+    else
+    {
+        isYReverse = false;
+    }
+}
+
+void MainWindow::on_zReverseBtn_clicked()
+{
+    if(isZReverse == false)
+    {
+        isZReverse = true;
+    }
+    else
+    {
+        isZReverse = false;
+    }
 }

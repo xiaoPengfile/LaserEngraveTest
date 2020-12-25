@@ -26,9 +26,21 @@ private slots:
 
     void onSerialReceiveMessage();      //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显示
 
+    void on_xReverseBtn_clicked();
+
+    void on_yReverseBtn_clicked();
+
+    void on_zReverseBtn_clicked();
+
+private:
+    void sendSerialData(QByteArray &data, QColor color); //向发送串口发送数据
+    void move(qreal X=0, qreal Y=0, qreal Z=0, qreal F=800);        //对XYZ轴进行移动
 private:
     QSerialPort * m_serialProt;
 
+    bool isXReverse;   //X轴是否反向
+    bool isYReverse;   //Y轴是否反向
+    bool isZReverse;   //Z轴是否反向
 
 private:
     Ui::MainWindow *ui;
