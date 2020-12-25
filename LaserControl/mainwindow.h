@@ -32,6 +32,14 @@ private slots:
 
     void on_zReverseBtn_clicked();
 
+    void on_yLeftMoveBtn_clicked();
+
+    void on_yRightMoveBtn_clicked();
+
+    void on_zLeftMoveBtn_clicked();
+
+    void on_zRightMoveBtn_clicked();
+
 private:
     void sendSerialData(QByteArray &data, QColor color); //向发送串口发送数据
     void move(qreal X=0, qreal Y=0, qreal Z=0, qreal F=800);        //对XYZ轴进行移动

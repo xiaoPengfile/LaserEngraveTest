@@ -243,3 +243,70 @@ void MainWindow::on_zReverseBtn_clicked()
         isZReverse = false;
     }
 }
+
+
+
+
+void MainWindow::on_yLeftMoveBtn_clicked()
+{
+    qreal yStep = ui->yStepLineEdit->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
+
+    //判断X轴是否反向
+    if(isYReverse==false)
+    {
+        move(0,yStep*(-1),0,fSpeed);
+    }
+    else
+    {
+        move(0,yStep,0,fSpeed);
+    }
+}
+
+void MainWindow::on_yRightMoveBtn_clicked()
+{
+    qreal yStep = ui->yStepLineEdit->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
+
+    //判断X轴是否反向
+    if(isYReverse==false)
+    {
+        move(0,yStep,0,fSpeed);
+    }
+    else
+    {
+        move(0,yStep*(-1),0,fSpeed);
+    }
+}
+
+void MainWindow::on_zLeftMoveBtn_clicked()
+{
+    qreal zStep = ui->zStepLineEdit->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
+
+    //判断X轴是否反向
+    if(isYReverse==false)
+    {
+        move(0,0,zStep*(-1),fSpeed);
+    }
+    else
+    {
+        move(0,0,zStep,fSpeed);
+    }
+}
+
+void MainWindow::on_zRightMoveBtn_clicked()
+{
+    qreal zStep = ui->zStepLineEdit->text().toFloat();
+    qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
+
+    //判断X轴是否反向
+    if(isYReverse==false)
+    {
+        move(0,0,zStep,fSpeed);
+    }
+    else
+    {
+        move(0,0,zStep*(-1),fSpeed);
+    }
+}
