@@ -43,9 +43,9 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>40</y>
-     <width>228</width>
-     <height>136</height>
+     <y>15</y>
+     <width>231</width>
+     <height>131</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -448,11 +448,11 @@
     <string>继续</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>180</y>
+     <y>150</y>
      <width>231</width>
      <height>141</height>
     </rect>

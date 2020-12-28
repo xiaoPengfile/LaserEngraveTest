@@ -72,6 +72,13 @@ void MainWindow::on_xRightMoveBtn_clicked()
 void MainWindow::onSerialReceiveMessage()
 {
     QString data = m_serialProt->readAll();
+
+    //如果接受到的字符串刚开始包含"\r\n",就进行删除
+    if(data.left(2) == "\r\n")
+    {
+        data.replace(0,2,"");
+    }
+
     //当同时接受多条数据时
     data = "->> " + data;
 
@@ -96,7 +103,7 @@ void MainWindow::sendSerialData(QByteArray &data, QColor color)
     //当同时发送多条数据时
     data = "<<- " + data;
 
-    //在除最后"\n"前，所有"\n"的后面加"<<- "
+    //删除最后"\n"前，所有"\n"的后面加"<<- "
     qint16 index = 0;
     index = data.indexOf("\n",index);
     while(index != data.size()-1 && index != -1 )
@@ -369,12 +376,18 @@ void MainWindow::on_RegressionOriginBtn_clicked()
 
 void MainWindow::on_unlockBtn_clicked()
 {
-
+    QByteArray data = "$X\n";
+    sendSerialData(data, "blue");
 }
 
 void MainWindow::on_restorationBtn_clicked()
 {
-
+    QString data={0x18};
+    QByteArray temp = data.toUtf8()+"\n";
+    m_serialProt->write(temp);
+    ui->viewTextEdit->setTextColor(QColor("blue"));
+    QString viewText = "<<- Ctrl+x(0x18)";
+    ui->viewTextEdit->append(viewText);
 }
 
 void MainWindow::on_pauseBtn_clicked()
