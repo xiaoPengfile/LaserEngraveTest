@@ -39,32 +39,6 @@
     <string>X-</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="searchSerialBtn">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>180</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>检测串口</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="openSerialBtn">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>180</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>打开串口</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -219,7 +193,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>300</y>
+     <y>310</y>
      <width>581</width>
      <height>281</height>
     </rect>
@@ -383,32 +357,6 @@
     <string>Y+</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>560</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_4">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>570</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="zLeftMoveBtn">
    <property name="geometry">
     <rect>
@@ -434,6 +382,139 @@
    <property name="text">
     <string>Z+</string>
    </property>
+  </widget>
+  <widget class="QLineEdit" name="openLaserLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>40</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>800</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>40</y>
+     <width>54</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>激光功率：</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="openLaserBtn">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>70</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开激光</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pauseBtn">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>270</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>暂停</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="continueBtn">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>270</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>继续</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>180</y>
+     <width>231</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="1">
+     <widget class="QPushButton" name="unlockBtn">
+      <property name="text">
+       <string>解锁</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="openGrbl">
+      <property name="text">
+       <string>打开grbl</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="RegressionOriginBtn">
+      <property name="text">
+       <string>回归原点</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="restorationBtn">
+      <property name="text">
+       <string>复位</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="searchSerialBtn">
+      <property name="text">
+       <string>检测串口</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="openSerialBtn">
+      <property name="text">
+       <string>打开串口</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="previewBtn">
+      <property name="text">
+       <string>预览</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="setTheOriginBtn">
+      <property name="text">
+       <string>设置原点</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

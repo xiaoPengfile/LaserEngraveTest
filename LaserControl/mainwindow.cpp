@@ -72,13 +72,19 @@ void MainWindow::on_xRightMoveBtn_clicked()
 void MainWindow::onSerialReceiveMessage()
 {
     QString data = m_serialProt->readAll();
-    /*
-    if(data.size() == 0)
+    //当同时接受多条数据时
+    data = "->> " + data;
+
+    //在除最后"\n"前，所有"\n"的后面加<<-
+    qint16 index = 0;
+    index = data.indexOf("\n",index);
+    while(index != data.size()-1 && index != -1 )
     {
-        return;
+        data.insert(index+1,"->> ");
+        index = data.indexOf("\n",index+3);
     }
-    */
-    data = "->>" + data;
+    //消除最后最后的换行符和水平制表符
+    data.replace(data.size()-2, 2, " ");
     ui->viewTextEdit->setTextColor("Red");
     ui->viewTextEdit->append(data);
 }
@@ -87,8 +93,21 @@ void MainWindow::sendSerialData(QByteArray &data, QColor color)
 {
     m_serialProt->write(data);
     ui->viewTextEdit->setTextColor(color);
-    data = "<<-" + data;
+    //当同时发送多条数据时
+    data = "<<- " + data;
+
+    //在除最后"\n"前，所有"\n"的后面加"<<- "
+    qint16 index = 0;
+    index = data.indexOf("\n",index);
+    while(index != data.size()-1 && index != -1 )
+    {
+        data.insert(index+1,"<<- ");
+        index = data.indexOf("\n",index+3);
+    }
+    //消除最后最后的换行符
+    data.replace(index, 1, " ");
     ui->viewTextEdit->append(data);
+
 }
 
 void MainWindow::move(qreal X, qreal Y, qreal Z, qreal F)
@@ -309,4 +328,61 @@ void MainWindow::on_zRightMoveBtn_clicked()
     {
         move(0,0,zStep*(-1),fSpeed);
     }
+}
+
+void MainWindow::on_openLaserBtn_clicked()
+{
+    if(ui->openLaserBtn->text() == "打开激光")
+    {
+        //获取激光大小
+        qint16 laserSize = ui->openLaserLineEdit->text().toInt();
+        //打开激光
+        QString data;
+        data = "M3S" + QString::number(laserSize) + "\n";
+        //将激光进给速度设置为1500毫秒/分钟
+        data += "G1F1000\n";
+        QByteArray temp = data.toUtf8();
+        sendSerialData(temp,"red");
+
+        //按钮文本改为"关闭激光"
+        ui->openLaserBtn->setText("关闭激光");
+    }
+    else
+    {
+        QByteArray data = "M5\n";
+        sendSerialData(data, "blue");
+        ui->openLaserBtn->setText("打开激光");
+    }
+}
+
+void MainWindow::on_setTheOriginBtn_clicked()
+{
+    QByteArray data = "G10 P0 L20 X0.0Y0.0Z0\n";
+    sendSerialData(data, "blue");
+}
+
+void MainWindow::on_RegressionOriginBtn_clicked()
+{
+    QByteArray data = "G90G0 X0Y0\n";
+    sendSerialData(data, "blue");
+}
+
+void MainWindow::on_unlockBtn_clicked()
+{
+
+}
+
+void MainWindow::on_restorationBtn_clicked()
+{
+
+}
+
+void MainWindow::on_pauseBtn_clicked()
+{
+
+}
+
+void MainWindow::on_continueBtn_clicked()
+{
+
 }
