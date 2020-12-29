@@ -19,7 +19,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void onSerialReceiveMessage();      //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显示
+    void onSerialReceiveMessage();      //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显
 
     void on_searchSerialBtn_clicked();  //当检测串口按钮被点击   功能在端口消息下拉框中添加端口描述信息为USB-SERIAL CH340的端口， 添加时格式为：端口描述信息-->端口名
 
@@ -49,6 +49,7 @@ private slots:
     void on_continueBtn_clicked();      //继续按钮被点击时
 
 private:
+    void initViewBtn();
     void sendSerialData(QByteArray &data, QColor color); //向发送串口发送数据
     void move(qreal X=0, qreal Y=0, qreal Z=0, qreal F=800);        //对XYZ轴进行移动
 private:

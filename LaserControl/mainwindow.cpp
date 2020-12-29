@@ -15,12 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->xRightMoveBtn->setEnabled(false);
     m_serialProt = new QSerialPort(this);
 
+    //设置画板颜色
+    setAutoFillBackground(true);
+    setPalette(QPalette(QColor(250,250,200)));
+
     //在端口号下拉框添加数据
     on_searchSerialBtn_clicked();
 
     ui->viewTextEdit->setReadOnly(true);
 
     ui->baudRateComb->setCurrentIndex(4);
+
+    //初始化按钮界面
+    initViewBtn();
 
     connect(m_serialProt, &QSerialPort::readyRead, this, &MainWindow::onSerialReceiveMessage);
     /*
@@ -214,6 +221,19 @@ void MainWindow::on_openSerialBtn_clicked()
 
             ui->xLeftMoveBtn->setEnabled(true);
             ui->xRightMoveBtn->setEnabled(true);
+            ui->openLaserBtn->setEnabled(true);
+            ui->setTheOriginBtn->setEnabled(true);
+            ui->RegressionOriginBtn->setEnabled(true);
+            ui->previewBtn->setEnabled(true);
+            ui->openGrblBtn->setEnabled(true);
+            ui->pauseBtn->setEnabled(true);
+            ui->continueBtn->setEnabled(true);
+            ui->yLeftMoveBtn->setEnabled(true);
+            ui->yRightMoveBtn->setEnabled(true);
+            ui->zLeftMoveBtn->setEnabled(true);
+            ui->zRightMoveBtn->setEnabled(true);
+            ui->unlockBtn->setEnabled(true);
+            ui->restorationBtn->setEnabled(true);
         }
         ui->openSerialBtn->setText("关闭串口");
     }
@@ -221,15 +241,7 @@ void MainWindow::on_openSerialBtn_clicked()
     {
         m_serialProt->close();
         ui->openSerialBtn->setText("打开串口");
-        ui->serialPortNameComb->setEnabled(true);
-        ui->dataBitsComb->setEnabled(true);
-        ui->baudRateComb->setEnabled(true);
-        ui->stopBitComb->setEnabled(true);
-        ui->parityBitComb->setEnabled(true);
-        ui->searchSerialBtn->setEnabled(true);
-
-        ui->xLeftMoveBtn->setEnabled(false);
-        ui->xRightMoveBtn->setEnabled(false);
+        initViewBtn();
     }
 
 }
@@ -398,4 +410,31 @@ void MainWindow::on_pauseBtn_clicked()
 void MainWindow::on_continueBtn_clicked()
 {
 
+}
+
+void MainWindow::initViewBtn()
+{
+    ui->serialPortNameComb->setEnabled(true);
+    ui->dataBitsComb->setEnabled(true);
+    ui->baudRateComb->setEnabled(true);
+    ui->stopBitComb->setEnabled(true);
+    ui->parityBitComb->setEnabled(true);
+    ui->searchSerialBtn->setEnabled(true);
+
+
+    ui->xLeftMoveBtn->setEnabled(false);
+    ui->xRightMoveBtn->setEnabled(false);
+    ui->openLaserBtn->setEnabled(false);
+    ui->setTheOriginBtn->setEnabled(false);
+    ui->RegressionOriginBtn->setEnabled(false);
+    ui->previewBtn->setEnabled(false);
+    ui->openGrblBtn->setEnabled(false);
+    ui->pauseBtn->setEnabled(false);
+    ui->continueBtn->setEnabled(false);
+    ui->yLeftMoveBtn->setEnabled(false);
+    ui->yRightMoveBtn->setEnabled(false);
+    ui->zLeftMoveBtn->setEnabled(false);
+    ui->zRightMoveBtn->setEnabled(false);
+    ui->unlockBtn->setEnabled(false);
+    ui->restorationBtn->setEnabled(false);
 }
