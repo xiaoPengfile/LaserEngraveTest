@@ -5,6 +5,8 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
+#include "grblwindow.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,6 +19,9 @@ class MainWindow : public QDialog
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+signals:
+    void signalGetGrblSettingData(QString data);
 
 private slots:
     void onSerialReceiveMessage();      //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显
@@ -48,17 +53,24 @@ private slots:
 
     void on_continueBtn_clicked();      //继续按钮被点击时
 
+    void on_modifyGrblBtn_clicked();    //修改grbl按钮被点击时
+    
+    void onModifyGrblConfig(QString data); //修改grbl配置
 private:
     void initViewBtn();
     void sendSerialData(QByteArray &data, QColor color); //向发送串口发送数据
     void move(qreal X=0, qreal Y=0, qreal Z=0, qreal F=800);        //对XYZ轴进行移动
+
 private:
     QSerialPort * m_serialProt;
+    GrblWindow *m_grblWindow;
 
-    bool isXReverse;   //X轴是否反向
-    bool isYReverse;   //Y轴是否反向
-    bool isZReverse;   //Z轴是否反向
+    bool m_isXReverse;   //X轴是否反向
+    bool m_isYReverse;   //Y轴是否反向
+    bool m_isZReverse;   //Z轴是否反向
 
+    bool m_isGetGrblInfo;  //是否获取grbl信息
+    QString m_receiveData;   //用来保存grbl消息
 private:
     Ui::MainWindow *ui;
 };

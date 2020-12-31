@@ -49,7 +49,7 @@
     <string>复位</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>500</x>
@@ -276,9 +276,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="openGrblBtn">
+       <widget class="QPushButton" name="modifyGrblBtn">
         <property name="text">
-         <string>打开grbl</string>
+         <string>修改grbl</string>
         </property>
        </widget>
       </item>

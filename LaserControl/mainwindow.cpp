@@ -3,17 +3,22 @@
 #include <QDebug>
 #include <QMessageBox>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::MainWindow)
-    ,isXReverse(false)
-    ,isYReverse(false)
-    ,isZReverse(false)
+    ,m_isXReverse(false)
+    ,m_isYReverse(false)
+    ,m_isZReverse(false)
+    ,m_isGetGrblInfo(false)
 {
+    this->setWindowTitle("LunYee控制台");
     ui->setupUi(this);
     ui->xLeftMoveBtn->setEnabled(false);
     ui->xRightMoveBtn->setEnabled(false);
     m_serialProt = new QSerialPort(this);
+
+    m_grblWindow = new GrblWindow(this);
 
     //设置画板颜色
     setAutoFillBackground(true);
@@ -29,12 +34,18 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化按钮界面
     initViewBtn();
 
+    //当有串口数据接收时
     connect(m_serialProt, &QSerialPort::readyRead, this, &MainWindow::onSerialReceiveMessage);
     /*
     QString serialProtName = ui->serialPortNameComb->currentText();
     qDebug() << serialProtName << endl;
     */
 
+    //当需要获取串口读取的grbl配置时
+    connect(this,SIGNAL(signalGetGrblSettingData(QString)), m_grblWindow, SLOT(onGetGrblInfo(QString)));
+
+    //当m_grblWindow发送singnalSenderConfigInfo(QString)信号是执行该类的onModifyGrblConfig(QString)函数，修改grbl配置
+    connect(m_grblWindow,SIGNAL(singnalSenderConfigInfo(QString)),this,SLOT(onModifyGrblConfig(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -49,7 +60,7 @@ void MainWindow::on_xLeftMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isXReverse==false)
+    if(m_isXReverse==false)
     {
         move(xStep*(-1),0,0,fSpeed);
     }
@@ -65,7 +76,7 @@ void MainWindow::on_xRightMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isXReverse==false)
+    if(m_isXReverse==false)
     {
         move(xStep,0,0,fSpeed);
     }
@@ -78,7 +89,27 @@ void MainWindow::on_xRightMoveBtn_clicked()
  //当串口接收到消息时执行的槽函数  功能接受串口传来的消息，并在富文本上显示
 void MainWindow::onSerialReceiveMessage()
 {
+
+
     QString data = m_serialProt->readAll();
+
+    //判断是否获取grbl配置信息
+    if(m_isGetGrblInfo)
+    {
+        m_receiveData += data;
+        if(data.right(4) == "ok\r\n")
+        {
+            m_isGetGrblInfo = false;
+            data = m_receiveData;
+            emit signalGetGrblSettingData(m_receiveData);
+            m_receiveData = "";
+        }
+        else
+        {
+            return;
+        }
+    }
+
 
     //如果接受到的字符串刚开始包含"\r\n",就进行删除
     if(data.left(2) == "\r\n")
@@ -97,8 +128,11 @@ void MainWindow::onSerialReceiveMessage()
         data.insert(index+1,"->> ");
         index = data.indexOf("\n",index+3);
     }
-    //消除最后最后的换行符和水平制表符
-    data.replace(data.size()-2, 2, " ");
+
+    //当最后存在换行符和水平制表符，消除最后最后的换行符和水平制表符
+    if(data.right(2) == "\r\n"){
+        data.replace(data.size()-2, 2, " ");
+    }
     ui->viewTextEdit->setTextColor("Red");
     ui->viewTextEdit->append(data);
 }
@@ -225,7 +259,7 @@ void MainWindow::on_openSerialBtn_clicked()
             ui->setTheOriginBtn->setEnabled(true);
             ui->RegressionOriginBtn->setEnabled(true);
             ui->previewBtn->setEnabled(true);
-            ui->openGrblBtn->setEnabled(true);
+            ui->modifyGrblBtn->setEnabled(true);
             ui->pauseBtn->setEnabled(true);
             ui->continueBtn->setEnabled(true);
             ui->yLeftMoveBtn->setEnabled(true);
@@ -248,37 +282,37 @@ void MainWindow::on_openSerialBtn_clicked()
 
 void MainWindow::on_xReverseBtn_clicked()
 {
-    if(isXReverse==false)
+    if(m_isXReverse==false)
     {
-        isXReverse = true;
+        m_isXReverse = true;
     }
     else
     {
-        isXReverse = false;
+        m_isXReverse = false;
     }
 }
 
 void MainWindow::on_yReverseBtn_clicked()
 {
-    if(isYReverse == false)
+    if(m_isYReverse == false)
     {
-        isYReverse = true;
+        m_isYReverse = true;
     }
     else
     {
-        isYReverse = false;
+        m_isYReverse = false;
     }
 }
 
 void MainWindow::on_zReverseBtn_clicked()
 {
-    if(isZReverse == false)
+    if(m_isZReverse == false)
     {
-        isZReverse = true;
+        m_isZReverse = true;
     }
     else
     {
-        isZReverse = false;
+        m_isZReverse = false;
     }
 }
 
@@ -291,7 +325,7 @@ void MainWindow::on_yLeftMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isYReverse==false)
+    if(m_isYReverse==false)
     {
         move(0,yStep*(-1),0,fSpeed);
     }
@@ -307,7 +341,7 @@ void MainWindow::on_yRightMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isYReverse==false)
+    if(m_isYReverse==false)
     {
         move(0,yStep,0,fSpeed);
     }
@@ -323,7 +357,7 @@ void MainWindow::on_zLeftMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isYReverse==false)
+    if(m_isYReverse==false)
     {
         move(0,0,zStep*(-1),fSpeed);
     }
@@ -339,7 +373,7 @@ void MainWindow::on_zRightMoveBtn_clicked()
     qreal fSpeed = ui->fSpeedLineEdit->text().toFloat();
 
     //判断X轴是否反向
-    if(isYReverse==false)
+    if(m_isYReverse==false)
     {
         move(0,0,zStep,fSpeed);
     }
@@ -428,7 +462,7 @@ void MainWindow::initViewBtn()
     ui->setTheOriginBtn->setEnabled(false);
     ui->RegressionOriginBtn->setEnabled(false);
     ui->previewBtn->setEnabled(false);
-    ui->openGrblBtn->setEnabled(false);
+    ui->modifyGrblBtn->setEnabled(false);
     ui->pauseBtn->setEnabled(false);
     ui->continueBtn->setEnabled(false);
     ui->yLeftMoveBtn->setEnabled(false);
@@ -437,4 +471,18 @@ void MainWindow::initViewBtn()
     ui->zRightMoveBtn->setEnabled(false);
     ui->unlockBtn->setEnabled(false);
     ui->restorationBtn->setEnabled(false);
+}
+
+void MainWindow::on_modifyGrblBtn_clicked()
+{
+    m_isGetGrblInfo = true;
+    QByteArray data = "$$\n";
+    sendSerialData(data, "blue");
+    m_grblWindow->show();
+}
+
+void MainWindow::onModifyGrblConfig(QString data)
+{
+    QByteArray senderData = data.toUtf8();
+    sendSerialData(senderData, "blue");
 }
